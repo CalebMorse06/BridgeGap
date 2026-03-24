@@ -65,8 +65,9 @@ function BuildPageInner() {
 
   // Check voice support
   useEffect(() => {
-    const SR = (window as unknown as Record<string, unknown>).SpeechRecognition || (window as unknown as Record<string, unknown>).webkitSpeechRecognition
-    setIsVoiceSupported(!!SR)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any
+    setIsVoiceSupported(!!(w.SpeechRecognition || w.webkitSpeechRecognition))
   }, [])
 
   // Initial greeting
@@ -191,7 +192,9 @@ function BuildPageInner() {
   }, [input, isTyping, templateType, questionIndex, answers, addMessage])
 
   const handleVoice = useCallback(() => {
-    const SR = (window as unknown as { new(): SpeechRecognition }).SpeechRecognition || (window as unknown as { new(): SpeechRecognition }).webkitSpeechRecognition
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any
+    const SR = w.SpeechRecognition || w.webkitSpeechRecognition
     if (!SR || isListening) return
 
     setIsListening(true)
@@ -200,7 +203,8 @@ function BuildPageInner() {
     recognition.interimResults = true
     recognition.lang = 'en-US'
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript
       setInput(transcript)
     }

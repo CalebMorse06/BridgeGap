@@ -343,16 +343,16 @@ function generateServiceBooking(c: GenerateConfig): string {
       <p style="font-size:16px;color:#6b7280">Got questions? We've got answers.</p>
     </div>
     ${[
-      {q:'How do I schedule an appointment?',a:'Just fill out the booking form below with your preferred date and time. We\\'ll confirm within 24 hours.'},
-      {q:'What areas do you serve?',a:location ? \`We proudly serve \${e(location)} and surrounding areas.\` : 'We serve the local area and surrounding communities. Contact us for details.'},
+      {q:'How do I schedule an appointment?',a:"Just fill out the booking form below with your preferred date and time. We'll confirm within 24 hours."},
+      {q:'What areas do you serve?',a:location ? `We proudly serve ${e(location)} and surrounding areas.` : 'We serve the local area and surrounding communities. Contact us for details.'},
       {q:'Do you offer emergency or same-day service?',a:'Yes! We offer same-day service for urgent needs. Call us directly for the fastest response.'},
       {q:'What forms of payment do you accept?',a:'We accept all major credit cards, cash, and digital payments. Payment is due upon completion of service.'},
-    ].map((f,i) => \`
+    ].map((f,i) => `
     <div>
-      <input type="checkbox" id="faq\${i}" class="faq-toggle">
-      <label for="faq\${i}" class="faq-label">\${f.q} <span class="faq-icon">+</span></label>
-      <div class="faq-answer"><div class="faq-answer-inner">\${f.a}</div></div>
-    </div>\`).join('')}
+      <input type="checkbox" id="faq${i}" class="faq-toggle">
+      <label for="faq${i}" class="faq-label">${f.q} <span class="faq-icon">+</span></label>
+      <div class="faq-answer"><div class="faq-answer-inner">${f.a}</div></div>
+    </div>`).join('')}
   </div>
 </section>
 
