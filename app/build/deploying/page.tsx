@@ -84,11 +84,12 @@ export default function DeployingPage() {
         setCompletedSteps((p) => [...p, 4])
 
         // Store result and redirect
-        const projectName = config.answers?.businessName || config.answers?.eventName || 'My App'
+        const projectName = genData.name || config.answers?.businessName || config.answers?.eventName || 'My App'
         sessionStorage.setItem('vibedeploy_result', JSON.stringify({
           url: depData.url,
           name: projectName,
           templateType: config.templateType,
+          projectId: genData.projectId,
         }))
 
         await new Promise((r) => setTimeout(r, 600))
