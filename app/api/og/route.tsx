@@ -8,26 +8,26 @@ export async function GET(req: NextRequest) {
   const name = searchParams.get('name') || 'My App'
   const type = searchParams.get('type') || 'service_booking'
 
-  const COLORS: Record<string, { bg: string; accent: string }> = {
-    service_booking: { bg: '#eff6ff', accent: '#2563eb' },
-    restaurant_menu: { bg: '#fff7ed', accent: '#ea580c' },
-    event_registration: { bg: '#ecfdf5', accent: '#059669' },
-    waitlist: { bg: '#f5f3ff', accent: '#7c3aed' },
-    portfolio: { bg: '#eef2ff', accent: '#4f46e5' },
-    donation: { bg: '#fef2f2', accent: '#dc2626' },
+  const PILL_COLORS: Record<string, { bg: string; text: string }> = {
+    service_booking: { bg: '#2563eb', text: '#fff' },
+    restaurant_menu: { bg: '#ea580c', text: '#fff' },
+    event_registration: { bg: '#059669', text: '#fff' },
+    waitlist: { bg: '#7c3aed', text: '#fff' },
+    portfolio: { bg: '#4f46e5', text: '#fff' },
+    donation: { bg: '#dc2626', text: '#fff' },
   }
 
-  const ICONS: Record<string, string> = {
-    service_booking: '🔧',
-    restaurant_menu: '🍕',
-    event_registration: '🎉',
-    waitlist: '📋',
-    portfolio: '🎨',
-    donation: '❤️',
+  const TYPE_LABELS: Record<string, string> = {
+    service_booking: 'Service Booking',
+    restaurant_menu: 'Restaurant Menu',
+    event_registration: 'Event Registration',
+    waitlist: 'Waitlist',
+    portfolio: 'Portfolio',
+    donation: 'Donation Page',
   }
 
-  const colors = COLORS[type] || COLORS.service_booking
-  const icon = ICONS[type] || '✨'
+  const pill = PILL_COLORS[type] || PILL_COLORS.service_booking
+  const label = TYPE_LABELS[type] || 'Web App'
 
   return new ImageResponse(
     (
@@ -37,60 +37,56 @@ export async function GET(req: NextRequest) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: colors.bg,
+          justifyContent: 'space-between',
+          background: 'linear-gradient(145deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
           fontFamily: 'Inter, sans-serif',
+          padding: '60px',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            marginBottom: '24px',
-          }}
-        >
-          <span style={{ fontSize: '48px' }}>✨</span>
-          <span style={{ fontSize: '24px', fontWeight: 800, color: '#111827' }}>VibeDeploy</span>
+        {/* Top left: VibeDeploy branding */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '28px' }}>✨</span>
+          <span style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff' }}>VibeDeploy</span>
         </div>
-        <div style={{ fontSize: '56px', marginBottom: '16px' }}>{icon}</div>
-        <h1
-          style={{
-            fontSize: '48px',
-            fontWeight: 900,
-            color: '#111827',
-            textAlign: 'center',
-            maxWidth: '800px',
-            lineHeight: 1.1,
-          }}
-        >
-          {name}
-        </h1>
-        <p
-          style={{
-            fontSize: '20px',
-            color: '#6b7280',
-            marginTop: '12px',
-          }}
-        >
-          Built in 60 seconds · No coding required
-        </p>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginTop: '32px',
-            background: colors.accent,
-            color: '#fff',
-            padding: '12px 28px',
-            borderRadius: '12px',
-            fontWeight: 700,
-            fontSize: '18px',
-          }}
-        >
-          Visit App →
+
+        {/* Center: App name + pill badge */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+          <h1
+            style={{
+              fontSize: name.length > 30 ? '42px' : '56px',
+              fontWeight: 900,
+              color: '#ffffff',
+              textAlign: 'center',
+              maxWidth: '900px',
+              lineHeight: 1.15,
+              letterSpacing: '-0.02em',
+              marginBottom: '24px',
+            }}
+          >
+            {name}
+          </h1>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: pill.bg,
+              color: pill.text,
+              padding: '10px 24px',
+              borderRadius: '99px',
+              fontWeight: 600,
+              fontSize: '16px',
+            }}
+          >
+            {label}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: '16px', color: '#94a3b8' }}>
+            vibedeploy.app — From idea to live app in 60 seconds
+          </span>
         </div>
       </div>
     ),
