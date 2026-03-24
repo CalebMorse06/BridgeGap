@@ -1,4 +1,4 @@
-export type TemplateType = 'service_booking' | 'restaurant_menu' | 'event_registration' | 'waitlist' | null
+export type TemplateType = 'service_booking' | 'restaurant_menu' | 'event_registration' | 'waitlist' | 'portfolio' | 'donation' | null
 
 export interface Message {
   id: string
@@ -179,6 +179,58 @@ export const TEMPLATE_QUESTIONS: Record<string, Question[]> = {
       quickReplies: ['Yes, auto-notify them', "No, I'll notify manually"],
     },
   ],
+  portfolio: [
+    {
+      key: 'yourName',
+      question: "What's your name?",
+      quickReplies: [],
+    },
+    {
+      key: 'role',
+      question: 'What do you do?',
+      quickReplies: ['Web Designer', 'Photographer', 'Consultant', 'Developer', 'Illustrator', 'Videographer', 'Writer', 'Coach'],
+    },
+    {
+      key: 'bio',
+      question: 'Write a short bio — a sentence or two about yourself and what you bring to clients.',
+      quickReplies: [],
+      multiline: true,
+    },
+    {
+      key: 'skills',
+      question: 'List your key skills or services, separated by commas.',
+      suggestion: 'Example: Web Design, Brand Identity, UI/UX, Photography',
+      quickReplies: [],
+    },
+    {
+      key: 'contactEmail',
+      question: "What's your email so potential clients can reach you?",
+      quickReplies: [],
+    },
+  ],
+  donation: [
+    {
+      key: 'organizationName',
+      question: "What's the name of your organization or cause?",
+      quickReplies: [],
+    },
+    {
+      key: 'mission',
+      question: 'Describe your mission in a sentence or two — what are you working to achieve?',
+      quickReplies: [],
+      multiline: true,
+    },
+    {
+      key: 'fundraisingGoal',
+      question: "What's your fundraising goal?",
+      quickReplies: ['$1,000', '$5,000', '$10,000', '$25,000', '$50,000'],
+    },
+    {
+      key: 'notificationEmail',
+      question: "What email should we send donation notifications to?",
+      quickReplies: [],
+    },
+  ],
 }
 
 export function detectTemplate(message: string): TemplateType {
@@ -194,6 +246,12 @@ export function detectTemplate(message: string): TemplateType {
   }
   if (/childcare|daycare|waitlist|launch|limited|beta|program|enrollment|sign.?up|queue|list|opening/.test(lower)) {
     return 'waitlist'
+  }
+  if (/portfolio|freelanc|creative|personal.?site|my.?work|showcase|hire.?me|consultant|design|illustrat|videograph/.test(lower)) {
+    return 'portfolio'
+  }
+  if (/donat|fundrais|nonprofit|non.?profit|charity|cause|campaign|give|support|ngo|foundation/.test(lower)) {
+    return 'donation'
   }
   return null
 }

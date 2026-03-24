@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateAppHTML, type TemplateType } from '@/lib/templates/generate-app'
+import { generateAppCopy } from '@/lib/ai/generate-copy'
 import { slugify } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
@@ -9,10 +10,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing templateType or answers' }, { status: 400 })
     }
 
-    // Create a project ID for tracking submissions
     const projectId = `proj_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
-    const rawName = answers.businessName || answers.eventName || answers.waitlistFor || answers.yourName || 'myapp'
+    const rawName = answers.businessName || answers.eventName || answers.waitlistFor || answers.yourName || answers.organizationName || 'myapp'
     const subdomain = slugify(rawName) || 'myapp'
+
+    // Generate AI-powered custom copy (falls back gracefully)
+    const copy = await generateAppCopy(templateType, answers)
 
     // Save project to Supabase if configured
     if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
@@ -25,8 +28,8 @@ export async function POST(req: NextRequest) {
           template_type: templateType,
           subdomain,
           status: 'live',
-          config: { answers, integrations },
-          notification_email: answers.contactEmail || answers.contactPhone || null,
+          config: { answers, integrations, copy },
+          notification_email: answers.contactEmail || null,
         })
       } catch (dbErr) {
         console.warn('DB save skipped:', dbErr)
@@ -37,13 +40,19 @@ export async function POST(req: NextRequest) {
       ...answers,
       projectId,
       notificationEmail: answers.contactEmail || '',
+      // Pass AI copy as JSON for template to use
+      _aiHeadline: copy.headline,
+      _aiSubheadline: copy.subheadline,
+      _aiCtaText: copy.ctaText,
+      _aiSeoDescription: copy.seoDescription,
     })
 
-    const files = [
-      { file: 'index.html', data: html },
-    ]
-
-    return NextResponse.json({ files, subdomain, projectId, name: rawName })
+    return NextResponse.json({
+      files: [{ file: 'index.html', data: html }],
+      subdomain,
+      projectId,
+      name: rawName,
+    })
   } catch (error) {
     console.error('Generate error:', error)
     return NextResponse.json({ error: 'Failed to generate app' }, { status: 500 })

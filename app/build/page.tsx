@@ -25,7 +25,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
   event_registration: '🎉 Event Registration',
   waitlist: '📋 Waitlist',
   portfolio: '🎨 Portfolio',
-  donation: '❤️ Donation Page',
+  donation: '❤️ Donation / Fundraiser',
 }
 
 // Color presets for brand customization
@@ -124,11 +124,34 @@ function BuildPageInner() {
         )
       } else {
         setIsTyping(false)
+        // Try AI detection as fallback
+        try {
+          const res = await fetch('/api/detect-template', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg }),
+          })
+          const data = await res.json()
+          if (data.template && TEMPLATE_QUESTIONS[data.template]) {
+            setTemplateType(data.template as TemplateType)
+            const firstQ = TEMPLATE_QUESTIONS[data.template][0]
+            setIsTyping(false)
+            addMessage('ai',
+              `I think a ${TEMPLATE_LABELS[data.template]} would be perfect for that! Let me get some details.\n\n${firstQ.question}${firstQ.suggestion ? `\n\n💡 ${firstQ.suggestion}` : ''}`,
+              firstQ.quickReplies || []
+            )
+            return
+          }
+        } catch {}
+
+        setIsTyping(false)
         addMessage('ai', "I can help! What kind of app do you need? Pick the closest one:", [
           '📅 Booking / appointments',
           '🍕 Restaurant menu',
           '🎉 Event registration',
           '📋 Waitlist / signups',
+          '🎨 Portfolio / freelancer',
+          '❤️ Donation / fundraiser',
         ])
       }
       return
@@ -167,6 +190,8 @@ function BuildPageInner() {
       '🍕 Restaurant menu': 'restaurant_menu',
       '🎉 Event registration': 'event_registration',
       '📋 Waitlist / signups': 'waitlist',
+      '🎨 Portfolio / freelancer': 'portfolio',
+      '❤️ Donation / fundraiser': 'donation',
     }
     if (templateMap[text]) {
       setTemplateType(templateMap[text])
