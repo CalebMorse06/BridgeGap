@@ -37,7 +37,7 @@ export default function DemoPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [stepIndex, setStepIndex] = useState(-1)
   const [typing, setTyping] = useState('')
-  const [phase, setPhase] = useState<'intro' | 'running' | 'done'>('intro')
+  const [phase, setPhase] = useState<'intro' | 'running' | 'done'>('running') // auto-start
   const [paused, setPaused] = useState(false)
 
   const addMsg = useCallback((role: 'ai' | 'user', text: string) => {

@@ -3,6 +3,22 @@ import { Resend } from 'resend'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
+async function sendSMS(to: string, body: string) {
+  const sid = process.env.TWILIO_ACCOUNT_SID
+  const token = process.env.TWILIO_AUTH_TOKEN
+  const from = process.env.TWILIO_PHONE_NUMBER
+  if (!sid || !token || !from) return
+
+  await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${sid}:${token}`).toString('base64')}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ To: to, From: from, Body: body }).toString(),
+  })
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { projectId, projectName, templateType, data, notificationEmail } = await req.json()
@@ -20,6 +36,15 @@ export async function POST(req: NextRequest) {
 
       // Increment submission count
       await admin.rpc('increment_stat', { project_id: projectId, stat_key: 'submissions' })
+    }
+
+    // Send SMS notification if phone number provided
+    const notifPhone = (data as Record<string, string>).notificationPhone || ''
+    if (notifPhone) {
+      const name = (data as Record<string, string>).name || 'Someone'
+      const service = (data as Record<string, string>).service || 'your service'
+      const msgBody = `📅 New booking: ${name} wants "${service}". Reply to confirm.\n\nView: ${process.env.NEXT_PUBLIC_APP_URL}/dashboard`
+      await sendSMS(notifPhone, msgBody).catch(() => {})
     }
 
     // Send notification email to business owner

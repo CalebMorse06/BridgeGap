@@ -258,9 +258,15 @@ export default function SuccessPage() {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <p className="text-center text-xs text-gray-400 mt-3">
-            Want to build another? <Link href="/build" className="text-blue-600 font-medium hover:underline">Start a new app →</Link>
-          </p>
+          <div className="flex gap-3 justify-center mt-3">
+            <Link href={`/edit/${result?.url?.split('/api/preview/')[1] || result?.url?.split('/').pop()}`} className="text-xs text-gray-500 hover:text-gray-700">
+              ✏️ Edit my app
+            </Link>
+            <span className="text-gray-300">·</span>
+            <Link href="/build" className="text-xs text-blue-600 font-medium hover:underline">
+              Build another →
+            </Link>
+          </div>
         </div>
       </div>
     </div>
