@@ -2,16 +2,19 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { ArrowRight, CheckCircle, Star, Zap, Lock, Globe } from 'lucide-react'
+import { ArrowRight, CheckCircle, Star, Zap, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-// Simulated typing animation for hero
-const HERO_PHRASES = [
-  "I'm a plumber and need customers to book online",
-  "I want a menu website for my pizza shop",
-  "I need to sell tickets for my yoga retreat",
-  "I'm launching a waitlist for my new daycare",
-  "I do photography and need a booking page",
+// Business types that cycle in the hero subtitle
+const BUSINESS_TYPES = ['plumber', 'restaurant', 'yoga studio', 'nonprofit', 'photographer']
+
+// Activity ticker messages
+const ACTIVITY_MESSAGES = [
+  'Sarah just built a spa booking app in Austin ✨',
+  'Marcus built a pizza menu for Golden Dragon in NYC ✨',
+  'A yoga studio in Denver just went live ✨',
+  'James built a fundraiser page in 47 seconds ✨',
+  'A plumber in Chicago just got their first booking ✨',
 ]
 
 const TEMPLATES = [
@@ -42,39 +45,65 @@ const TESTIMONIALS = [
   { quote: "Sold out my yoga workshop the same day I launched. Customers could actually register.", name: 'Maya Johnson', biz: 'Flow Yoga Studio', avatar: '🧘', stars: 5 },
 ]
 
-function HeroTyping() {
-  const [phraseIndex, setPhraseIndex] = useState(0)
-  const [displayed, setDisplayed] = useState('')
-  const [typing, setTyping] = useState(true)
+// Animated business type cycler — smooth crossfade
+function BusinessTypeCycler() {
+  const [index, setIndex] = useState(0)
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const phrase = HERO_PHRASES[phraseIndex]
-    if (typing) {
-      if (displayed.length < phrase.length) {
-        const t = setTimeout(() => setDisplayed(phrase.slice(0, displayed.length + 1)), 38)
-        return () => clearTimeout(t)
-      } else {
-        const t = setTimeout(() => setTyping(false), 2000)
-        return () => clearTimeout(t)
-      }
-    } else {
-      if (displayed.length > 0) {
-        const t = setTimeout(() => setDisplayed(d => d.slice(0, -1)), 18)
-        return () => clearTimeout(t)
-      } else {
-        setPhraseIndex(i => (i + 1) % HERO_PHRASES.length)
-        setTyping(true)
-      }
-    }
-  }, [displayed, typing, phraseIndex])
+    const interval = setInterval(() => {
+      setVisible(false)
+      setTimeout(() => {
+        setIndex(i => (i + 1) % BUSINESS_TYPES.length)
+        setVisible(true)
+      }, 400)
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-start gap-3 max-w-xl mx-auto lg:mx-0">
-      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm shrink-0 mt-0.5">✨</div>
-      <div className="flex-1 min-h-[48px]">
-        <p className="text-sm text-gray-800 leading-relaxed">
-          {displayed || ' '}
-          <span className="inline-block w-0.5 h-4 bg-blue-600 ml-0.5 animate-pulse align-text-bottom" />
+    <span
+      className="inline-block transition-all duration-400"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(8px)',
+        transition: 'opacity 0.4s ease, transform 0.4s ease',
+      }}
+    >
+      {BUSINESS_TYPES[index]}
+    </span>
+  )
+}
+
+// Activity ticker with slide-up animation
+function ActivityTicker() {
+  const [index, setIndex] = useState(0)
+  const [animating, setAnimating] = useState(false)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimating(true)
+      setTimeout(() => {
+        setIndex(i => (i + 1) % ACTIVITY_MESSAGES.length)
+        setAnimating(false)
+      }, 500)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="inline-flex items-center gap-2.5 bg-white border border-gray-100 shadow-sm rounded-full px-5 py-2.5 overflow-hidden" style={{ maxWidth: '100%' }}>
+      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse shrink-0" />
+      <div style={{ height: '20px', overflow: 'hidden', position: 'relative' }}>
+        <p
+          className="text-sm text-gray-600 whitespace-nowrap"
+          style={{
+            transition: 'opacity 0.5s ease, transform 0.5s ease',
+            opacity: animating ? 0 : 1,
+            transform: animating ? 'translateY(-20px)' : 'translateY(0)',
+          }}
+        >
+          {ACTIVITY_MESSAGES[index]}
         </p>
       </div>
     </div>
@@ -129,6 +158,7 @@ export default function Home() {
             <div className="hidden sm:flex items-center gap-6 text-sm text-gray-500 font-medium">
               <a href="#templates" className="hover:text-gray-900 transition-colors">Templates</a>
               <a href="#how-it-works" className="hover:text-gray-900 transition-colors">How it works</a>
+              <Link href="/gallery" className="hover:text-gray-900 transition-colors">Gallery</Link>
               <Link href="/demo" className="hover:text-gray-900 transition-colors">Live Demo</Link>
               <Link href="/dashboard" className="hover:text-gray-900 transition-colors">Dashboard</Link>
             </div>
@@ -149,44 +179,58 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50/30 to-white pt-20 pb-24 sm:pt-28 sm:pb-32 px-4 sm:px-6">
         {/* Background blur orb */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-100/40 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-100/40 to-transparent rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           {/* Left */}
           <div>
             <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
               <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-              2,400+ apps deployed · No coding needed
+              Now in public beta
             </div>
-            <h1 className="text-5xl sm:text-6xl font-black text-gray-900 leading-[1.05] tracking-tight mb-6">
-              From idea to{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                live app
+
+            {/* Gradient headline */}
+            <h1 className="text-5xl sm:text-6xl font-black leading-[1.05] tracking-tight mb-6">
+              <span
+                style={{
+                  background: 'linear-gradient(135deg, #1d4ed8 0%, #7c3aed 50%, #2563eb 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                From idea to live app
               </span>
-              <br />in 60 seconds.
+              <br />
+              <span className="text-gray-900">in 60 seconds</span>
             </h1>
+
+            {/* Animated subtitle with cycling business types */}
             <p className="text-xl text-gray-500 leading-relaxed mb-8 max-w-lg">
-              Tell us what you need in plain English. We build a real working web app — with a database, forms, and notifications — and deploy it instantly.
+              Whether you&apos;re a{' '}
+              <span className="font-semibold text-gray-800">
+                <BusinessTypeCycler />
+              </span>
+              {' '}— describe what you need and we&apos;ll build, host, and launch your app. No code required.
             </p>
 
-            {/* Typing demo */}
-            <div className="mb-8">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Try saying something like...</p>
-              <HeroTyping />
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <Button size="xl" asChild className="text-base font-semibold">
                 <Link href="/build">
-                  Build My Free App
+                  Start Building Free
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="xl" variant="outline" asChild className="text-base">
-                <Link href="/dashboard">See Demo Apps →</Link>
+              <Button size="xl" variant="ghost" asChild className="text-base">
+                <a href="#how-it-works">See it live ↓</a>
               </Button>
             </div>
-            <p className="text-xs text-gray-400 mt-4">No credit card · No signup required · Live in under 60 seconds</p>
+
+            {/* Activity ticker */}
+            <div className="mt-8">
+              <ActivityTicker />
+            </div>
           </div>
 
           {/* Right — live app cards */}
@@ -224,7 +268,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">How it works</p>
-            <h2 className="text-4xl font-black text-gray-900 mb-4">Three steps. That's it.</h2>
+            <h2 className="text-4xl font-black text-gray-900 mb-4">Three steps. That&apos;s it.</h2>
             <p className="text-lg text-gray-500 max-w-md mx-auto">No tutorials, no technical setup, no developer needed.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -278,7 +322,7 @@ export default function Home() {
           <div className="text-center mb-14">
             <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">Templates</p>
             <h2 className="text-4xl font-black text-gray-900 mb-4">Built for real businesses</h2>
-            <p className="text-lg text-gray-500">Pick a starting point or just describe your problem — we'll figure out the right one.</p>
+            <p className="text-lg text-gray-500">Pick a starting point or just describe your problem — we&apos;ll figure out the right one.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {TEMPLATES.map(t => (
@@ -319,7 +363,7 @@ export default function Home() {
                     <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 text-sm leading-relaxed mb-5">"{t.quote}"</p>
+                <p className="text-gray-700 text-sm leading-relaxed mb-5">&ldquo;{t.quote}&rdquo;</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-xl">{t.avatar}</div>
                   <div>
@@ -367,6 +411,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-500">
               <Link href="/build" className="hover:text-gray-300 transition-colors">Build</Link>
+              <Link href="/gallery" className="hover:text-gray-300 transition-colors">Gallery</Link>
               <Link href="/dashboard" className="hover:text-gray-300 transition-colors">Dashboard</Link>
               <a href="#templates" className="hover:text-gray-300 transition-colors">Templates</a>
               <span className="text-gray-700">·</span>
