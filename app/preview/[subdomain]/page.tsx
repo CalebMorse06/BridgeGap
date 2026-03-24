@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'App Preview — VibeDeploy',
+  title: 'App Preview — BridgeGap',
 }
 
 export default function PreviewPage({ params }: { params: { subdomain: string } }) {
@@ -20,7 +20,7 @@ export default function PreviewPage({ params }: { params: { subdomain: string } 
         <div className="flex-1 mx-2">
           <div className="bg-gray-100 rounded-lg px-3 py-1.5 text-xs font-mono text-gray-600 border border-gray-200 flex items-center gap-2">
             <span className="text-green-500">🔒</span>
-            <span className="truncate">vibedeploy.app/preview/{params.subdomain}</span>
+            <span className="truncate">bridgegap.app/preview/{params.subdomain}</span>
           </div>
         </div>
         <div className="flex items-center gap-3">

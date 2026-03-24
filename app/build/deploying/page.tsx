@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation'
 import { CheckCircle, Loader2 } from 'lucide-react'
 
 const PHASES = [
-  { key: 'start', label: 'Understanding your requirements', icon: '🧠' },
-  { key: 'generating_copy', label: 'Writing custom copy with AI', icon: '✍️' },
-  { key: 'building_html', label: 'Building your app', icon: '🔧' },
-  { key: 'saving', label: 'Deploying to the web', icon: '🚀' },
-  { key: 'done', label: 'Going live', icon: '🌐' },
+  { key: 'start', label: 'Understanding your requirements' },
+  { key: 'generating_copy', label: 'Writing custom copy' },
+  { key: 'building_html', label: 'Building your website' },
+  { key: 'saving', label: 'Deploying to the web' },
+  { key: 'done', label: 'Going live' },
 ]
 
 const MESSAGES = [
@@ -170,8 +170,10 @@ export default function DeployingPage() {
           <div className="p-8">
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="text-5xl mb-4" style={{ animation: 'float 2s ease-in-out infinite' }}>🚀</div>
-              <h2 className="text-2xl font-black text-gray-900">Building your app</h2>
+              <div className="mb-4 flex justify-center">
+                <div className="w-12 h-12 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+              </div>
+              <h2 className="text-2xl font-black text-gray-900">Building your website</h2>
               <p className="text-gray-500 text-sm mt-1">Usually takes about 15–30 seconds</p>
             </div>
 
@@ -195,11 +197,8 @@ export default function DeployingPage() {
                         : <div className="w-5 h-5 rounded-full border-2 border-gray-200" />
                       }
                     </div>
-                    <span className="text-sm flex items-center gap-2">
-                      <span>{phase.icon}</span>
-                      <span className={isDone ? 'text-gray-600' : isCurrent ? 'text-blue-700 font-semibold' : 'text-gray-400'}>
-                        {phase.label}
-                      </span>
+                    <span className={`text-sm ${isDone ? 'text-gray-600' : isCurrent ? 'text-blue-700 font-semibold' : 'text-gray-400'}`}>
+                      {phase.label}
                     </span>
                   </div>
                 )
@@ -229,7 +228,7 @@ export default function DeployingPage() {
             </div>
           </div>
         </div>
-        <p className="text-center text-xs text-gray-400 mt-4">Your app is being crafted with care ✨</p>
+        <p className="text-center text-xs text-gray-400 mt-4">This usually takes 15–30 seconds.</p>
       </div>
     </div>
   )

@@ -57,9 +57,7 @@ export function IntegrationPanel({ integrations, onToggle, onDeploy, subdomain }
     <div className="animate-fade-in">
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-white">
-          <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-            <span>⚡</span> Optional Features
-          </h3>
+          <h3 className="font-semibold text-gray-900">Optional features</h3>
           <p className="text-xs text-gray-500 mt-0.5">Toggle on what you need. Change anytime.</p>
         </div>
 
@@ -96,7 +94,7 @@ export function IntegrationPanel({ integrations, onToggle, onDeploy, subdomain }
         <p className="text-center text-xs text-gray-400 mt-2.5">
           Deploying to{' '}
           <span className="font-medium text-gray-600 font-mono">
-            {subdomain ? `${subdomain}.vibedeploy.app` : 'yourapp.vibedeploy.app'}
+            {subdomain ? `${subdomain}.bridgegap.app` : 'yourapp.bridgegap.app'}
           </span>
         </p>
       </div>

@@ -9,7 +9,7 @@ import confetti from 'canvas-confetti'
 
 const TEMPLATE_LABELS: Record<string, { label: string; color: string; nextSteps: string[] }> = {
   service_booking: {
-    label: '🔧 Service Booking',
+    label: 'Service Booking',
     color: 'text-blue-600 bg-blue-50 border-blue-100',
     nextSteps: [
       'Share the link with customers via text or email',
@@ -19,7 +19,7 @@ const TEMPLATE_LABELS: Record<string, { label: string; color: string; nextSteps:
     ],
   },
   restaurant_menu: {
-    label: '🍕 Restaurant Menu',
+    label: 'Restaurant Menu',
     color: 'text-orange-600 bg-orange-50 border-orange-100',
     nextSteps: [
       'Share the link on your Instagram and Facebook',
@@ -29,7 +29,7 @@ const TEMPLATE_LABELS: Record<string, { label: string; color: string; nextSteps:
     ],
   },
   event_registration: {
-    label: '🎉 Event Registration',
+    label: 'Event Registration',
     color: 'text-green-600 bg-green-50 border-green-100',
     nextSteps: [
       'Share the link on social media and email newsletters',
@@ -39,7 +39,7 @@ const TEMPLATE_LABELS: Record<string, { label: string; color: string; nextSteps:
     ],
   },
   waitlist: {
-    label: '📋 Waitlist',
+    label: 'Waitlist',
     color: 'text-purple-600 bg-purple-50 border-purple-100',
     nextSteps: [
       'Share the link anywhere people can sign up',
@@ -72,23 +72,12 @@ export default function SuccessPage() {
     if (!result || confettiRef.current) return
     confettiRef.current = true
 
-    // First burst — blue/white
     confetti({
-      particleCount: 100,
-      spread: 120,
+      particleCount: 60,
+      spread: 100,
       origin: { y: 0.6 },
       colors: ['#2563eb', '#3b82f6', '#dbeafe', '#ffffff'],
     })
-
-    // Second burst — gold
-    setTimeout(() => {
-      confetti({
-        particleCount: 80,
-        spread: 100,
-        origin: { y: 0.6 },
-        colors: ['#f59e0b', '#fbbf24'],
-      })
-    }, 800)
 
     // Generate QR code client-side
     import('qrcode').then((QRCode) => {
@@ -151,7 +140,7 @@ export default function SuccessPage() {
   const isPreview = result ? (result.url.includes('/api/preview/') || result.url.includes('localhost')) : false
   const subdomain = result?.url.split('/api/preview/')[1] || result?.url.split('/').pop() || ''
   const displayUrl = isPreview
-    ? `${subdomain}.vibedeploy.app` // friendly display even in preview mode
+    ? `${subdomain}.bridgegap.app` // friendly display even in preview mode
     : result?.url || ''
   const appHref = result
     ? isPreview
@@ -176,9 +165,8 @@ export default function SuccessPage() {
       {/* Nav */}
       <nav className="bg-white/80 backdrop-blur border-b border-gray-100 px-4 py-3">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span>✨</span>
-            <span className="font-bold text-gray-900">VibeDeploy</span>
+          <Link href="/" className="font-bold text-gray-900">
+            BridgeGap
           </Link>
           <Button size="sm" variant="ghost" asChild>
             <Link href="/dashboard">My Apps →</Link>
@@ -189,16 +177,10 @@ export default function SuccessPage() {
       <div className="max-w-xl mx-auto px-4 py-12">
         {/* Celebration */}
         <div className="text-center mb-8" style={{ animation: 'slideUp 0.5s ease-out' }}>
-          <div
-            className="text-7xl mb-4"
-            style={{
-              animation: 'bounceIn 0.6s ease-out',
-              display: 'inline-block',
-            }}
-          >
-            🎉
+          <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="w-8 h-8 text-emerald-600" />
           </div>
-          <h1 className="text-3xl font-black text-gray-900 mb-2">Your app is live!</h1>
+          <h1 className="text-3xl font-black text-gray-900 mb-2">Your website is live</h1>
           <p className="text-gray-500">
             <span className="font-semibold text-gray-700">{result.name}</span> is ready for customers right now.
           </p>
@@ -242,17 +224,17 @@ export default function SuccessPage() {
 
             {/* Action buttons */}
             <div className="grid grid-cols-2 gap-3 mb-4">
-              <Button size="lg" className="w-full font-semibold" asChild>
+              <Button size="lg" className="w-full font-semibold" onClick={handleShare}>
+                {copied
+                  ? <><CheckCircle className="mr-2 h-4 w-4" />Copied!</>
+                  : <><Share2 className="mr-2 h-4 w-4" />Share your link</>
+                }
+              </Button>
+              <Button size="lg" variant="outline" className="w-full" asChild>
                 <a href={appHref} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  Open App
+                  Open website
                 </a>
-              </Button>
-              <Button size="lg" variant="outline" className="w-full" onClick={handleShare}>
-                {copied
-                  ? <><CheckCircle className="mr-2 h-4 w-4 text-emerald-500" />Copied!</>
-                  : <><Share2 className="mr-2 h-4 w-4" />Share Link</>
-                }
               </Button>
             </div>
 
@@ -289,15 +271,13 @@ export default function SuccessPage() {
             onClick={() => setShowImproveModal(true)}
             className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
           >
-            ✨ Improve with AI
+            Improve with AI
           </button>
         </div>
 
         {/* What's next */}
         <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5" style={{ animation: 'slideUp 0.5s ease-out 0.3s both' }}>
-          <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <span>💡</span> What to do next
-          </h3>
+          <h3 className="font-semibold text-gray-900 mb-4">What to do next</h3>
           <div className="space-y-3">
             {tmpl.nextSteps.map((step, i) => (
               <div key={i} className="flex items-start gap-3">
@@ -320,7 +300,7 @@ export default function SuccessPage() {
           </Button>
           <div className="flex gap-3 justify-center mt-3">
             <Link href={`/edit/${result?.url?.split('/api/preview/')[1] || result?.url?.split('/').pop()}`} className="text-xs text-gray-500 hover:text-gray-700">
-              ✏️ Edit my app
+              Edit my website
             </Link>
             <span className="text-gray-300">·</span>
             <Link href="/build" className="text-xs text-blue-600 font-medium hover:underline">
@@ -339,9 +319,7 @@ export default function SuccessPage() {
         >
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" style={{ animation: 'fadeIn 0.2s ease-out' }}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
-                ✨ Improve with AI
-              </h3>
+              <h3 className="font-bold text-gray-900 text-lg">Improve with AI</h3>
               <button
                 onClick={() => setShowImproveModal(false)}
                 className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"

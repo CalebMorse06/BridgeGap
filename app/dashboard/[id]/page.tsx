@@ -22,9 +22,9 @@ const MOCK_SUBMISSIONS: Record<string, { id: string; data: Record<string, string
 }
 
 const MOCK_PROJECTS: Record<string, { name: string; templateType: string; deploymentUrl: string; status: string; createdAt: string; stats: { views: number; submissions: number } }> = {
-  '1': { name: "Bob's Plumbing", templateType: 'service_booking', deploymentUrl: 'bobsplumbing.vibedeploy.app', status: 'live', createdAt: '2026-03-20', stats: { views: 247, submissions: 12 } },
-  '2': { name: 'Taco Fiesta', templateType: 'restaurant_menu', deploymentUrl: 'tacofiesta.vibedeploy.app', status: 'live', createdAt: '2026-03-18', stats: { views: 891, submissions: 0 } },
-  '3': { name: 'Morning Flow Yoga', templateType: 'event_registration', deploymentUrl: 'morningflowyoga.vibedeploy.app', status: 'live', createdAt: '2026-03-15', stats: { views: 312, submissions: 38 } },
+  '1': { name: "Bob's Plumbing", templateType: 'service_booking', deploymentUrl: 'bobsplumbing.bridgegap.app', status: 'live', createdAt: '2026-03-20', stats: { views: 247, submissions: 12 } },
+  '2': { name: 'Taco Fiesta', templateType: 'restaurant_menu', deploymentUrl: 'tacofiesta.bridgegap.app', status: 'live', createdAt: '2026-03-18', stats: { views: 891, submissions: 0 } },
+  '3': { name: 'Morning Flow Yoga', templateType: 'event_registration', deploymentUrl: 'morningflowyoga.bridgegap.app', status: 'live', createdAt: '2026-03-15', stats: { views: 312, submissions: 38 } },
 }
 
 const STATUS_STYLES: Record<string, string> = {

@@ -25,7 +25,7 @@ a{background:#2563eb;color:#fff;padding:12px 28px;border-radius:10px;font-weight
 <body><div class="box">
 <div style="font-size:48px;margin-bottom:16px">🔍</div>
 <h1>App not found</h1>
-<p>This app doesn't exist yet, or it was built in a different session. Build your own at VibeDeploy.</p>
+<p>This app doesn't exist yet, or it was built in a different session. Build your own at BridgeGap.</p>
 <a href="/">Build My App →</a>
 </div></body></html>`,
       { status: 404, headers: { 'Content-Type': 'text/html' } }

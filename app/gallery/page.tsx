@@ -39,7 +39,7 @@ export default function GalleryPage() {
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <span className="text-xl">✨</span>
-              <span className="text-lg font-black text-gray-900">VibeDeploy</span>
+              <span className="text-lg font-black text-gray-900">BridgeGap</span>
             </Link>
             <div className="flex items-center gap-3">
               <Button size="sm" asChild>
@@ -63,7 +63,7 @@ export default function GalleryPage() {
               backgroundClip: 'text',
             }}
           >
-            Built with VibeDeploy
+            Built with BridgeGap
           </span>
         </h1>
         <p className="text-lg text-gray-500 max-w-md mx-auto">
@@ -102,7 +102,7 @@ export default function GalleryPage() {
                         <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
                       </div>
                       <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-gray-400 font-mono truncate">
-                        {app.subdomain}.vibedeploy.app
+                        {app.subdomain}.bridgegap.app
                       </div>
                     </div>
                     {/* iframe preview */}

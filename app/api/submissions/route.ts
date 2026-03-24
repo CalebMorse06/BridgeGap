@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       const html = getEmailHtml(templateType, projectName, data)
 
       await resend.emails.send({
-        from: 'VibeDeploy <notifications@vibedeploy.app>',
+        from: 'BridgeGap <notifications@bridgegap.app>',
         to: notificationEmail,
         subject,
         html,
@@ -103,8 +103,8 @@ function getEmailHtml(templateType: string, projectName: string, data: Record<st
       ${rows}
     </table>
     <div style="padding:20px 32px;border-top:1px solid #f3f4f6">
-      <a href="https://vibedeploy.app/dashboard" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none">View in Dashboard →</a>
-      <p style="font-size:12px;color:#9ca3af;margin-top:16px">Sent by <a href="https://vibedeploy.app" style="color:#2563eb">VibeDeploy</a></p>
+      <a href="https://bridgegap.app/dashboard" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none">View in Dashboard →</a>
+      <p style="font-size:12px;color:#9ca3af;margin-top:16px">Sent by <a href="https://bridgegap.app" style="color:#2563eb">BridgeGap</a></p>
     </div>
   </div>
 </body>

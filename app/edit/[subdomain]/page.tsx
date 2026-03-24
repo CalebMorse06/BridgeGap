@@ -213,7 +213,7 @@ export default function EditPage() {
                     <p className="font-medium text-sm text-gray-900">App URL</p>
                     <p className="text-xs text-gray-400 mt-0.5">Your app is live at this address</p>
                   </div>
-                  <code className="text-xs text-blue-600 font-mono bg-blue-50 px-2 py-1 rounded-lg">{subdomain}.vibedeploy.app</code>
+                  <code className="text-xs text-blue-600 font-mono bg-blue-50 px-2 py-1 rounded-lg">{subdomain}.bridgegap.app</code>
                 </div>
                 <div className="flex items-center justify-between py-3">
                   <div>
@@ -237,7 +237,7 @@ export default function EditPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
                   <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
                   <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                  <span className="text-[10px] text-gray-400 font-mono ml-2 truncate">{subdomain}.vibedeploy.app</span>
+                  <span className="text-[10px] text-gray-400 font-mono ml-2 truncate">{subdomain}.bridgegap.app</span>
                 </div>
                 <iframe
                   src={`/api/preview/${subdomain}`}

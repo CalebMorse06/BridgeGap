@@ -20,25 +20,14 @@ import {
 import { slugify } from '@/lib/utils'
 
 const TEMPLATE_LABELS: Record<string, string> = {
-  service_booking: '🔧 Service Booking',
-  restaurant_menu: '🍕 Restaurant Menu',
-  event_registration: '🎉 Event Registration',
-  waitlist: '📋 Waitlist',
-  portfolio: '🎨 Portfolio',
-  donation: '❤️ Donation / Fundraiser',
+  service_booking: 'Service Booking',
+  restaurant_menu: 'Restaurant Menu',
+  event_registration: 'Event Registration',
+  waitlist: 'Waitlist',
+  portfolio: 'Portfolio',
+  donation: 'Donation / Fundraiser',
 }
 
-// Color presets for brand customization
-const BRAND_COLORS = [
-  { name: 'Blue', value: '#2563eb' },
-  { name: 'Green', value: '#059669' },
-  { name: 'Purple', value: '#7c3aed' },
-  { name: 'Red', value: '#dc2626' },
-  { name: 'Orange', value: '#ea580c' },
-  { name: 'Pink', value: '#db2777' },
-  { name: 'Teal', value: '#0d9488' },
-  { name: 'Indigo', value: '#4f46e5' },
-]
 
 function BuildPageInner() {
   const router = useRouter()
@@ -53,8 +42,7 @@ function BuildPageInner() {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [phase, setPhase] = useState<'chat' | 'integrations'>('chat')
   const [showPreview, setShowPreview] = useState(false)
-  const [brandColor, setBrandColor] = useState('#2563eb')
-  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [brandColor] = useState('#2563eb')
   const [integrations, setIntegrations] = useState<Integration[]>(
     INTEGRATIONS_CONFIG.map(i => ({ type: i.id, enabled: i.defaultEnabled, useOwnKeys: false }))
   )
@@ -85,7 +73,7 @@ function BuildPageInner() {
       setMessages([{
         id: '1',
         role: 'ai',
-        content: "Hey! 👋 Tell me about your business or what you're trying to solve — I'll build you a real working app.\n\nFor example:\n• \"I'm a plumber and need customers to book online\"\n• \"I need a menu website for my taco shop\"\n• \"I want to sell tickets for my yoga workshop\"",
+        content: "Welcome to BridgeGap. Tell me about your business and what you need — I'll build you a working website.\n\nFor example:\n• \"I'm a plumber and need customers to book online\"\n• \"I need a menu website for my taco shop\"\n• \"I want to sell tickets for my yoga workshop\"",
         timestamp: new Date(),
         quickReplies: [],
       }])
@@ -154,13 +142,13 @@ function BuildPageInner() {
         } catch {}
 
         setIsTyping(false)
-        addMessage('ai', "I can help! What kind of app do you need? Pick the closest one:", [
-          '📅 Booking / appointments',
-          '🍕 Restaurant menu',
-          '🎉 Event registration',
-          '📋 Waitlist / signups',
-          '🎨 Portfolio / freelancer',
-          '❤️ Donation / fundraiser',
+        addMessage('ai', "I can help with that. What type of website do you need? Pick the closest one:", [
+          'Booking / appointments',
+          'Restaurant menu',
+          'Event registration',
+          'Waitlist / signups',
+          'Portfolio / freelancer',
+          'Donation / fundraiser',
         ])
       }
       return
@@ -187,7 +175,7 @@ function BuildPageInner() {
     } else {
       setIsTyping(false)
       setPhase('integrations')
-      addMessage('ai', `That's everything I need! 🎉\n\nHere are some optional features you can add to your app. Toggle on what you want — they all work out of the box.`)
+      addMessage('ai', `That's everything I need.\n\nHere are some optional features you can add. Toggle on what you want — they all work out of the box.`)
     }
   }, [input, isTyping, templateType, questionIndex, answers, addMessage])
 
@@ -230,12 +218,12 @@ function BuildPageInner() {
   const handleQuickReply = useCallback((text: string) => {
     // Map friendly labels back to values
     const templateMap: Record<string, TemplateType> = {
-      '📅 Booking / appointments': 'service_booking',
-      '🍕 Restaurant menu': 'restaurant_menu',
-      '🎉 Event registration': 'event_registration',
-      '📋 Waitlist / signups': 'waitlist',
-      '🎨 Portfolio / freelancer': 'portfolio',
-      '❤️ Donation / fundraiser': 'donation',
+      'Booking / appointments': 'service_booking',
+      'Restaurant menu': 'restaurant_menu',
+      'Event registration': 'event_registration',
+      'Waitlist / signups': 'waitlist',
+      'Portfolio / freelancer': 'portfolio',
+      'Donation / fundraiser': 'donation',
     }
     if (templateMap[text]) {
       setTemplateType(templateMap[text])
@@ -294,8 +282,7 @@ function BuildPageInner() {
       <header className="bg-white border-b border-gray-100 px-4 sm:px-6 shrink-0 z-10">
         <div className="max-w-screen-2xl mx-auto flex items-center justify-between h-14">
           <div className="flex items-center gap-3">
-            <span className="text-lg">✨</span>
-            <span className="font-semibold text-gray-900 text-sm hidden sm:block">VibeDeploy</span>
+            <span className="font-semibold text-gray-900 text-sm hidden sm:block">BridgeGap</span>
             {templateType && (
               <>
                 <span className="text-gray-200">/</span>
@@ -305,36 +292,6 @@ function BuildPageInner() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Brand color picker */}
-            {templateType && (
-              <div className="relative">
-                <button
-                  onClick={() => setShowColorPicker(!showColorPicker)}
-                  className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
-                  title="Brand color"
-                >
-                  <span className="w-3.5 h-3.5 rounded-full border border-white/50 shadow-sm" style={{ background: brandColor }} />
-                  <span className="hidden sm:block">Brand Color</span>
-                </button>
-                {showColorPicker && (
-                  <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-xl shadow-xl p-3 z-50" style={{ animation: 'fadeIn 0.15s ease-out' }}>
-                    <p className="text-xs text-gray-500 mb-2 font-medium">Pick your brand color</p>
-                    <div className="grid grid-cols-4 gap-2">
-                      {BRAND_COLORS.map(c => (
-                        <button
-                          key={c.value}
-                          onClick={() => { setBrandColor(c.value); setShowColorPicker(false) }}
-                          className="w-8 h-8 rounded-lg border-2 transition-all hover:scale-110"
-                          style={{ background: c.value, borderColor: brandColor === c.value ? '#111827' : 'transparent' }}
-                          title={c.name}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Progress */}
             {templateType && phase === 'chat' && totalQ > 0 && (
               <div className="hidden sm:flex items-center gap-2 text-xs text-gray-500">
@@ -470,7 +427,7 @@ export default function BuildPage() {
     <Suspense fallback={
       <div className="h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="text-4xl mb-3 animate-bounce">✨</div>
+          <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="text-sm text-gray-500">Loading...</p>
         </div>
       </div>

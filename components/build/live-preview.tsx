@@ -56,8 +56,8 @@ export function LivePreview({ templateType, answers, className = '' }: LivePrevi
         <div className="flex-1 mx-3">
           <div className="bg-white rounded-md px-3 py-1 text-xs text-gray-500 font-mono border border-gray-200 text-center truncate">
             {answers.businessName || answers.eventName || answers.waitlistFor
-              ? `${(answers.businessName || answers.eventName || answers.waitlistFor || '').toLowerCase().replace(/[^a-z0-9]/g, '')}.vibedeploy.app`
-              : 'yourapp.vibedeploy.app'}
+              ? `${(answers.businessName || answers.eventName || answers.waitlistFor || '').toLowerCase().replace(/[^a-z0-9]/g, '')}.bridgegap.app`
+              : 'yourapp.bridgegap.app'}
           </div>
         </div>
         <div className="flex items-center gap-1">

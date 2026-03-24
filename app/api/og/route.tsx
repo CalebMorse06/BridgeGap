@@ -43,10 +43,10 @@ export async function GET(req: NextRequest) {
           padding: '60px',
         }}
       >
-        {/* Top left: VibeDeploy branding */}
+        {/* Top left: BridgeGap branding */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ fontSize: '28px' }}>✨</span>
-          <span style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff' }}>VibeDeploy</span>
+          <span style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff' }}>BridgeGap</span>
         </div>
 
         {/* Center: App name + pill badge */}
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
         {/* Bottom bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ fontSize: '16px', color: '#94a3b8' }}>
-            vibedeploy.app — From idea to live app in 60 seconds
+            bridgegap.app — From idea to live app in 60 seconds
           </span>
         </div>
       </div>

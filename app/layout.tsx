@@ -8,13 +8,13 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'VibeDeploy — Turn Your Idea Into a Live App',
+  title: 'BridgeGap — Turn Your Idea Into a Live App',
   description: 'Describe what you need. AI builds it, deploys it, and makes it live — in minutes. No coding required.',
   openGraph: {
-    title: 'VibeDeploy',
+    title: 'BridgeGap',
     description: 'From idea to live app in minutes. No coding required.',
-    url: 'https://vibedeploy.app',
-    siteName: 'VibeDeploy',
+    url: 'https://bridgegap.app',
+    siteName: 'BridgeGap',
     type: 'website',
   },
 }
@@ -31,7 +31,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="VibeDeploy" />
+        <meta name="apple-mobile-web-app-title" content="BridgeGap" />
       </head>
       <body className="antialiased">
         {children}

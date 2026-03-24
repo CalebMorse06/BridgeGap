@@ -19,7 +19,7 @@ export function generateAppHTML(templateType: TemplateType, config: GenerateConf
   }
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_APP_URL || 'https://vibedeploy.app'
+const API_BASE = process.env.NEXT_PUBLIC_APP_URL || 'https://bridgegap.app'
 
 function e(s: string | undefined): string {
   return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -174,8 +174,8 @@ function foot(projectId: string, primaryColor = '#2563eb', businessCtx: string =
   </div>
 </div>
 
-<div id="vd-brand" style="position:fixed;bottom:20px;left:20px;z-index:999;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px 12px;box-shadow:0 2px 8px rgba(0,0,0,.06);font-family:Inter,-apple-system,sans-serif;cursor:pointer;font-size:11px;color:#9ca3af;font-weight:500" onclick="window.open('https://vibedeploy.app','_blank')">
-  <span>✨</span>VibeDeploy
+<div id="vd-brand" style="position:fixed;bottom:20px;left:20px;z-index:999;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px 12px;box-shadow:0 2px 8px rgba(0,0,0,.06);font-family:Inter,-apple-system,sans-serif;cursor:pointer;font-size:11px;color:#9ca3af;font-weight:500" onclick="window.open('https://bridgegap.app','_blank')">
+  <span>✨</span>BridgeGap
 </div>
 
 <script>
@@ -390,7 +390,7 @@ function generateServiceBooking(c: GenerateConfig): string {
     <p style="font-size:20px;font-weight:800;color:#fff;margin-bottom:10px">${e(name)}</p>
     <p style="font-size:14px;color:#9ca3af;line-height:2">${[hours && `🕐 ${e(hours)}`, location && `📍 ${e(location)}`, email && `✉️ <a href="mailto:${e(email)}" style="color:#60a5fa">${e(email)}</a>`].filter(Boolean).join(' &nbsp;·&nbsp; ')}</p>
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid #1f2937">
-      <p style="font-size:12px;color:#4b5563">Built with <a href="https://vibedeploy.app" style="color:#60a5fa;font-weight:500">VibeDeploy</a> — no coding required</p>
+      <p style="font-size:12px;color:#4b5563">Built with <a href="https://bridgegap.app" style="color:#60a5fa;font-weight:500">BridgeGap</a> — no coding required</p>
     </div>
   </div>
 </footer>
@@ -534,7 +534,7 @@ ${addressHours ? `
     <p style="font-size:20px;font-weight:800;color:#fff;margin-bottom:10px">${e(name)}</p>
     <p style="font-size:14px;color:#9ca3af">${e(cuisine)}${addressHours ? ` · ${e(addressHours.split('\n')[0])}` : ''}${phone ? ` · ${e(phone)}` : ''}</p>
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid #1f2937">
-      <p style="font-size:12px;color:#4b5563">Built with <a href="https://vibedeploy.app" style="color:#fb923c;font-weight:500">VibeDeploy</a></p>
+      <p style="font-size:12px;color:#4b5563">Built with <a href="https://bridgegap.app" style="color:#fb923c;font-weight:500">BridgeGap</a></p>
     </div>
   </div>
 </footer>
@@ -613,7 +613,7 @@ ${dateTime || location ? `
     <p style="font-size:20px;font-weight:800;color:#fff;margin-bottom:10px">${e(name)}</p>
     <p style="font-size:14px;color:#9ca3af">${[dateTime && `📅 ${e(dateTime)}`, location && `📍 ${e(location)}`].filter(Boolean).join(' · ')}</p>
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid #1f2937">
-      <p style="font-size:12px;color:#4b5563">Built with <a href="https://vibedeploy.app" style="color:#34d399;font-weight:500">VibeDeploy</a></p>
+      <p style="font-size:12px;color:#4b5563">Built with <a href="https://bridgegap.app" style="color:#34d399;font-weight:500">BridgeGap</a></p>
     </div>
   </div>
 </footer>
@@ -675,7 +675,7 @@ function generateWaitlist(c: GenerateConfig): string {
     </form>
 
     <p style="text-align:center;margin-top:32px;font-size:12px;color:#9ca3af">
-      Built with <a href="https://vibedeploy.app" style="color:var(--p);font-weight:500">VibeDeploy</a>
+      Built with <a href="https://bridgegap.app" style="color:var(--p);font-weight:500">BridgeGap</a>
     </p>
   </div>
 </section>
@@ -764,7 +764,7 @@ ${email ? `
     <p style="font-weight:800;color:#fff;margin-bottom:6px">${e(name)}</p>
     <p style="font-size:14px;color:#9ca3af">${e(role)}</p>
     <div style="margin-top:20px;padding-top:16px;border-top:1px solid #1f2937">
-      <p style="font-size:12px;color:#4b5563">Built with <a href="https://vibedeploy.app" style="color:#818cf8;font-weight:500">VibeDeploy</a></p>
+      <p style="font-size:12px;color:#4b5563">Built with <a href="https://bridgegap.app" style="color:#818cf8;font-weight:500">BridgeGap</a></p>
     </div>
   </div>
 </footer>
@@ -846,7 +846,7 @@ function generateDonation(c: GenerateConfig): string {
 <footer style="background:#111827;padding:40px 0 28px">
   <div class="c" style="text-align:center">
     <p style="font-weight:800;color:#fff;margin-bottom:6px">❤️ ${e(orgName)}</p>
-    <p style="font-size:12px;color:#4b5563;margin-top:16px">Built with <a href="https://vibedeploy.app" style="color:#f87171;font-weight:500">VibeDeploy</a></p>
+    <p style="font-size:12px;color:#4b5563;margin-top:16px">Built with <a href="https://bridgegap.app" style="color:#f87171;font-weight:500">BridgeGap</a></p>
   </div>
 </footer>
 

@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: '*.vibedeploy.app' },
+      { protocol: 'https', hostname: '*.bridgegap.app' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },

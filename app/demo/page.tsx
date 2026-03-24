@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { LivePreview } from '@/components/build/live-preview'
 
 /**
- * Demo page — judges and visitors can watch VibeDeploy build an app in real time
+ * Demo page — judges and visitors can watch BridgeGap build an app in real time
  * with pre-filled answers that auto-type, showing the full flow.
  */
 
@@ -117,9 +117,9 @@ export default function DemoPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
         <div className="max-w-lg text-center">
           <div className="text-6xl mb-6">✨</div>
-          <h1 className="text-4xl font-black text-gray-900 mb-4">VibeDeploy Demo</h1>
+          <h1 className="text-4xl font-black text-gray-900 mb-4">BridgeGap Demo</h1>
           <p className="text-lg text-gray-500 mb-8 leading-relaxed">
-            Watch VibeDeploy build a real booking app for a plumber in Austin — from conversation to live app in under 60 seconds.
+            Watch BridgeGap build a real booking app for a plumber in Austin — from conversation to live app in under 60 seconds.
           </p>
           <Button size="xl" onClick={() => { setPhase('running'); setStepIndex(-1) }} className="text-base font-semibold">
             <Play className="mr-2 h-5 w-5" />
@@ -148,7 +148,7 @@ export default function DemoPage() {
         <div className="max-w-screen-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-lg">✨</span>
-            <span className="font-semibold text-gray-900 text-sm">VibeDeploy</span>
+            <span className="font-semibold text-gray-900 text-sm">BridgeGap</span>
             <Badge className="bg-amber-100 text-amber-700 border-amber-200 text-xs">Demo Mode</Badge>
           </div>
           <div className="flex items-center gap-3">
