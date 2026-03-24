@@ -129,6 +129,7 @@ export default function Home() {
             <div className="hidden sm:flex items-center gap-6 text-sm text-gray-500 font-medium">
               <a href="#templates" className="hover:text-gray-900 transition-colors">Templates</a>
               <a href="#how-it-works" className="hover:text-gray-900 transition-colors">How it works</a>
+              <Link href="/demo" className="hover:text-gray-900 transition-colors">Live Demo</Link>
               <Link href="/dashboard" className="hover:text-gray-900 transition-colors">Dashboard</Link>
             </div>
             <div className="flex items-center gap-3">
