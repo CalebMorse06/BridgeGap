@@ -245,21 +245,21 @@ function generateServiceBooking(c: GenerateConfig): string {
   </div>
 </nav>
 
-<section style="background:linear-gradient(140deg,#eff6ff 0%,#fff 55%,#f0fdf4 100%);padding:96px 0 80px;position:relative;overflow:hidden">
+<section style="background:linear-gradient(160deg,#eff6ff 0%,#ffffff 60%);padding:96px 0 80px;position:relative;overflow:hidden">
   <div style="position:absolute;top:-30%;right:-5%;width:480px;height:480px;background:radial-gradient(circle,rgba(37,99,235,.05) 0%,transparent 70%);border-radius:50%;pointer-events:none"></div>
   <div class="c fade" style="position:relative;z-index:1">
     <div class="tag" style="background:#dbeafe;color:#1d4ed8;margin-bottom:20px">
       <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block"></span>
       Available for bookings
     </div>
-    <h1 style="font-size:clamp(34px,5.5vw,58px);font-weight:900;color:#111827;line-height:1.08;letter-spacing:-.025em;margin-bottom:18px;max-width:620px">${e(name)}</h1>
+    <h1 style="font-size:clamp(34px,5.5vw,58px);font-weight:900;line-height:1.08;letter-spacing:-.025em;margin-bottom:18px;max-width:620px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${e(name)}</h1>
     <p style="font-size:18px;color:#6b7280;max-width:480px;margin-bottom:36px;line-height:1.7">Professional, reliable service — book online in seconds. No phone tag, no waiting.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
       <a href="#book" class="btn btn-p" style="font-size:16px;padding:16px 36px">📅 Book an Appointment</a>
       ${email ? `<a href="mailto:${e(email)}" class="btn btn-o">✉️ Email Us</a>` : ''}
     </div>
-    <div style="display:flex;gap:28px;flex-wrap:wrap;margin-top:40px">
-      ${[`⭐ 5-Star Service`, `🕐 ${hours}`, location ? `📍 ${location}` : '', `✅ Licensed & Insured`].filter(Boolean).map(t => `<span style="font-size:13px;color:#6b7280;font-weight:500">${e(t!)}</span>`).join('')}
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:40px">
+      ${[`⭐ 5-Star Rated`, `✅ Licensed & Insured`, `⚡ Same-Day Available`, location ? `📍 ${location}` : ''].filter(Boolean).map(t => `<span style="font-size:13px;color:#6b7280;font-weight:500;display:inline-flex;align-items:center;gap:4px">${e(t!)}</span>`).join('<span style="color:#e5e7eb">·</span>')}
     </div>
   </div>
 </section>
@@ -270,12 +270,12 @@ function generateServiceBooking(c: GenerateConfig): string {
       <h2 style="font-size:34px;font-weight:800;color:#111827;margin-bottom:10px">Our Services</h2>
       <p style="font-size:16px;color:#6b7280;max-width:440px;margin:0 auto">Everything handled professionally, every time.</p>
     </div>
-    <div class="grid3">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
       ${rawServices.map((s, i) => `
-      <div class="card card-p" style="text-align:center;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div style="width:56px;height:56px;border-radius:14px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px">${svcIcons[i % svcIcons.length]}</div>
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="width:52px;height:52px;border-radius:14px;background:color-mix(in srgb,var(--p) 12%,transparent);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px">${svcIcons[i % svcIcons.length]}</div>
         <h3 style="font-weight:700;font-size:16px;color:#111827;margin-bottom:6px">${e(s)}</h3>
-        <p style="font-size:13px;color:#9ca3af;line-height:1.5">Handled by experienced professionals.</p>
+        <p style="font-size:13px;color:#9ca3af;line-height:1.5">Handled by licensed professionals</p>
       </div>`).join('')}
     </div>
   </div>
@@ -322,6 +322,37 @@ function generateServiceBooking(c: GenerateConfig): string {
         </div>
       </div>`).join('')}
     </div>
+  </div>
+</section>
+
+<style>
+.faq-toggle{display:none}
+.faq-label{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;cursor:pointer;font-weight:600;font-size:15px;color:#111827;background:#fff;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:8px;transition:all .2s}
+.faq-label:hover{background:#f9fafb}
+.faq-label .faq-icon{font-size:20px;color:#9ca3af;transition:transform .3s;font-weight:400}
+.faq-toggle:checked + .faq-label{border-radius:12px 12px 0 0;margin-bottom:0;border-bottom:none}
+.faq-toggle:checked + .faq-label .faq-icon{transform:rotate(45deg);color:var(--p)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;background:#fff}
+.faq-toggle:checked ~ .faq-answer{max-height:200px;margin-bottom:8px}
+.faq-answer-inner{padding:0 24px 20px;font-size:14px;color:#6b7280;line-height:1.7}
+</style>
+<section class="sec">
+  <div class="c" style="max-width:680px">
+    <div style="text-align:center;margin-bottom:48px">
+      <h2 style="font-size:34px;font-weight:800;color:#111827;margin-bottom:10px">Frequently Asked Questions</h2>
+      <p style="font-size:16px;color:#6b7280">Got questions? We've got answers.</p>
+    </div>
+    ${[
+      {q:'How do I schedule an appointment?',a:'Just fill out the booking form below with your preferred date and time. We\\'ll confirm within 24 hours.'},
+      {q:'What areas do you serve?',a:location ? \`We proudly serve \${e(location)} and surrounding areas.\` : 'We serve the local area and surrounding communities. Contact us for details.'},
+      {q:'Do you offer emergency or same-day service?',a:'Yes! We offer same-day service for urgent needs. Call us directly for the fastest response.'},
+      {q:'What forms of payment do you accept?',a:'We accept all major credit cards, cash, and digital payments. Payment is due upon completion of service.'},
+    ].map((f,i) => \`
+    <div>
+      <input type="checkbox" id="faq\${i}" class="faq-toggle">
+      <label for="faq\${i}" class="faq-label">\${f.q} <span class="faq-icon">+</span></label>
+      <div class="faq-answer"><div class="faq-answer-inner">\${f.a}</div></div>
+    </div>\`).join('')}
   </div>
 </section>
 
