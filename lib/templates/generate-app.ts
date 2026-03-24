@@ -149,8 +149,15 @@ function head(title: string, primary: string, primaryLight: string, desc?: strin
 ${SUCCESS_OVERLAY}`
 }
 
-function foot(projectId: string): string {
-  return `${ANALYTICS_SCRIPT(projectId)}</body></html>`
+function foot(projectId: string, primaryColor = '#2563eb'): string {
+  // Import at the top won't work for circular; inline the widget
+  const widget = `
+<div id="vd-badge" style="position:fixed;bottom:16px;right:16px;z-index:999;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px 14px;box-shadow:0 2px 12px rgba(0,0,0,.08);font-family:Inter,-apple-system,sans-serif;cursor:pointer;transition:all .2s" onclick="window.open('https://vibedeploy.app','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+  <span style="font-size:14px">✨</span>
+  <div style="font-size:11px;font-weight:600;color:#111827;line-height:1.3">Built with VibeDeploy</div>
+</div>
+`
+  return `${widget}${ANALYTICS_SCRIPT(projectId)}</body></html>`
 }
 
 // ---------------------------------------------------------------------------

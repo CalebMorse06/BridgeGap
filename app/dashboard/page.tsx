@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Plus, ExternalLink, Edit3, Share2, BarChart2, ArrowUpRight, Sparkles } from 'lucide-react'
+import { Plus, ExternalLink, BarChart2, ArrowUpRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -157,11 +157,11 @@ export default function DashboardPage() {
                       View
                     </a>
                   </Button>
-                  <Button size="sm" variant="outline" className="text-xs h-8 px-3">
-                    <Edit3 className="h-3 w-3" />
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs h-8 px-3">
-                    <Share2 className="h-3 w-3" />
+                  <Button size="sm" variant="outline" className="flex-1 text-xs h-8" asChild>
+                    <Link href={`/dashboard/${project.id}`}>
+                      <BarChart2 className="mr-1.5 h-3 w-3" />
+                      Manage
+                    </Link>
                   </Button>
                 </div>
               </div>
