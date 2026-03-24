@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Copy, ExternalLink, CheckCircle, ArrowRight, Share2, Download, QrCode } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import confetti from 'canvas-confetti'
 
 const TEMPLATE_LABELS: Record<string, { label: string; color: string; nextSteps: string[] }> = {
   service_booking: {
@@ -56,6 +56,9 @@ export default function SuccessPage() {
   const [copied, setCopied] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
   const [showQr, setShowQr] = useState(false)
+  const [showImproveModal, setShowImproveModal] = useState(false)
+  const [improveInput, setImproveInput] = useState('')
+  const [improving, setImproving] = useState(false)
   const confettiRef = useRef<boolean>(false)
 
   useEffect(() => {
@@ -64,9 +67,28 @@ export default function SuccessPage() {
     setResult(JSON.parse(raw))
   }, [router])
 
+  // Fire confetti on mount
   useEffect(() => {
     if (!result || confettiRef.current) return
     confettiRef.current = true
+
+    // First burst — blue/white
+    confetti({
+      particleCount: 100,
+      spread: 120,
+      origin: { y: 0.6 },
+      colors: ['#2563eb', '#3b82f6', '#dbeafe', '#ffffff'],
+    })
+
+    // Second burst — gold
+    setTimeout(() => {
+      confetti({
+        particleCount: 80,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#f59e0b', '#fbbf24'],
+      })
+    }, 800)
 
     // Generate QR code client-side
     import('qrcode').then((QRCode) => {
@@ -103,6 +125,26 @@ export default function SuccessPage() {
       } catch {}
     }
     handleCopy()
+  }
+
+  const handleImprove = async () => {
+    if (!improveInput.trim() || !result) return
+    setImproving(true)
+    try {
+      const subdomain = result.url.split('/api/preview/')[1] || result.url.split('/').pop() || ''
+      const res = await fetch('/api/ai-improve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subdomain, instruction: improveInput }),
+      })
+      if (res.ok) {
+        setShowImproveModal(false)
+        setImproveInput('')
+        // Force iframe refresh by briefly navigating
+        window.location.reload()
+      }
+    } catch {}
+    setImproving(false)
   }
 
   // Derive clean display URL and real href
@@ -147,7 +189,15 @@ export default function SuccessPage() {
       <div className="max-w-xl mx-auto px-4 py-12">
         {/* Celebration */}
         <div className="text-center mb-8" style={{ animation: 'slideUp 0.5s ease-out' }}>
-          <div className="text-7xl mb-4" style={{ animation: 'bounceIn 0.6s ease-out' }}>🎉</div>
+          <div
+            className="text-7xl mb-4"
+            style={{
+              animation: 'bounceIn 0.6s ease-out',
+              display: 'inline-block',
+            }}
+          >
+            🎉
+          </div>
           <h1 className="text-3xl font-black text-gray-900 mb-2">Your app is live!</h1>
           <p className="text-gray-500">
             <span className="font-semibold text-gray-700">{result.name}</span> is ready for customers right now.
@@ -233,6 +283,16 @@ export default function SuccessPage() {
           </div>
         </div>
 
+        {/* AI Improve button */}
+        <div className="mb-5" style={{ animation: 'slideUp 0.5s ease-out 0.22s both' }}>
+          <button
+            onClick={() => setShowImproveModal(true)}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+          >
+            ✨ Improve with AI
+          </button>
+        </div>
+
         {/* What's next */}
         <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5" style={{ animation: 'slideUp 0.5s ease-out 0.3s both' }}>
           <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -269,6 +329,63 @@ export default function SuccessPage() {
           </div>
         </div>
       </div>
+
+      {/* AI Improve Modal */}
+      {showImproveModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backdropFilter: 'blur(8px)', background: 'rgba(0,0,0,0.4)' }}
+          onClick={(ev) => { if (ev.target === ev.currentTarget) setShowImproveModal(false) }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" style={{ animation: 'fadeIn 0.2s ease-out' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                ✨ Improve with AI
+              </h3>
+              <button
+                onClick={() => setShowImproveModal(false)}
+                className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mb-4">
+              Describe what you&apos;d like to change and AI will update your app instantly.
+            </p>
+            <input
+              value={improveInput}
+              onChange={e => setImproveInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleImprove()}
+              placeholder="e.g. Make the headline more compelling"
+              className="w-full h-11 rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-gray-400 mb-4"
+              autoFocus
+            />
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowImproveModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleImprove}
+                disabled={!improveInput.trim() || improving}
+              >
+                {improving ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Improving...
+                  </span>
+                ) : (
+                  'Apply Changes'
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
