@@ -228,6 +228,23 @@ function BuildPageInner() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
+      {/* Layout CSS injected directly to avoid Turbopack tree-shaking */}
+      <style>{`
+        .build-chat-pane { width: 100%; }
+        .build-preview-pane { display: none; flex: 1; min-width: 0; flex-direction: column; }
+        .build-preview-mobile { display: block; }
+        @media (min-width: 1024px) {
+          .build-chat-pane { width: 460px; }
+          .build-preview-pane { display: flex; }
+          .build-preview-mobile { display: none !important; }
+        }
+        .demo-chat-pane { width: 100%; }
+        .demo-preview-pane { display: none; flex: 1; }
+        @media (min-width: 1024px) {
+          .demo-chat-pane { width: 460px; }
+          .demo-preview-pane { display: flex; }
+        }
+      `}</style>
       {/* Header */}
       <header className="bg-white border-b border-gray-100 px-4 sm:px-6 shrink-0 z-10">
         <div className="max-w-screen-2xl mx-auto flex items-center justify-between h-14">
@@ -297,7 +314,7 @@ function BuildPageInner() {
       {/* Main */}
       <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Chat column */}
-        <div className={`flex flex-col min-w-0 transition-all duration-300 ${showPreview ? 'flex-none w-full lg:w-[440px]' : 'flex-1'} ${showPreview ? 'lg:border-r lg:border-gray-200' : ''}`}>
+        <div className={`flex flex-col min-w-0 transition-all duration-300 ${showPreview ? 'build-chat-pane flex-none border-r border-gray-200' : 'flex-1'}`}>
           {/* Messages scroll area */}
           <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-5">
             <div className="max-w-lg mx-auto lg:mx-0">
@@ -356,18 +373,29 @@ function BuildPageInner() {
           )}
         </div>
 
-        {/* Preview panel */}
+        {/* Preview panel — desktop side-by-side, mobile full-screen overlay */}
         {showPreview && (
-          <div className="fixed inset-0 top-14 z-20 lg:z-0 lg:relative lg:inset-auto lg:flex-1 lg:min-w-0 bg-gray-100">
-            <div className="h-full p-3 lg:p-5">
+          <div className="build-preview-pane bg-gray-100">
+            <div className="h-full p-3" style={{padding: '20px'}}>
               <LivePreview
                 templateType={templateType}
                 answers={{ ...answers, brandColor }}
                 className="h-full"
               />
             </div>
-            {/* Mobile close */}
-            <button onClick={() => setShowPreview(false)} className="lg:hidden absolute top-4 right-4 bg-white rounded-full p-2 shadow-md border border-gray-200">
+          </div>
+        )}
+        {/* Mobile preview overlay (only on small screens) */}
+        {showPreview && (
+          <div className="build-preview-mobile fixed inset-0 bg-gray-100 z-20" style={{top: '56px'}}>
+            <div className="h-full p-3">
+              <LivePreview
+                templateType={templateType}
+                answers={{ ...answers, brandColor }}
+                className="h-full"
+              />
+            </div>
+            <button onClick={() => setShowPreview(false)} className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md border border-gray-200">
               <PanelRightClose className="h-4 w-4 text-gray-600" />
             </button>
           </div>

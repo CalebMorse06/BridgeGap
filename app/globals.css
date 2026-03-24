@@ -119,20 +119,32 @@ body {
   to { stroke-dashoffset: 0; }
 }
 
-/* Demo layout */
-.demo-chat-pane {
+/* Demo + Build layout — chat pane fixed width on large screens */
+.demo-chat-pane,
+.build-chat-pane {
   width: 100%;
 }
-.demo-preview-pane {
+.demo-preview-pane,
+.build-preview-pane {
   display: none;
   flex: 1;
+  min-width: 0;
+}
+.build-preview-mobile {
+  display: block;
 }
 @media (min-width: 1024px) {
-  .demo-chat-pane {
+  .demo-chat-pane,
+  .build-chat-pane {
     width: 460px;
   }
-  .demo-preview-pane {
+  .demo-preview-pane,
+  .build-preview-pane {
     display: flex;
+    flex-direction: column;
+  }
+  .build-preview-mobile {
+    display: none !important;
   }
 }
 
