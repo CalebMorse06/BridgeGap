@@ -70,7 +70,10 @@ export default function SuccessPage() {
 
     // Generate QR code client-side
     import('qrcode').then((QRCode) => {
-      QRCode.toDataURL(`https://${result.url}`, {
+      const appUrl = result.url.startsWith('localhost') || result.url.includes('api/preview')
+        ? `${window.location.origin}/${result.url.split('/').slice(1).join('/')}`
+        : `https://${result.url}`
+      QRCode.toDataURL(appUrl, {
         width: 256,
         margin: 2,
         color: { dark: '#111827', light: '#ffffff' },
@@ -80,7 +83,10 @@ export default function SuccessPage() {
 
   const handleCopy = () => {
     if (!result) return
-    navigator.clipboard.writeText(`https://${result.url}`)
+    const shareUrl = result.url.startsWith('localhost') || result.url.includes('api/preview')
+      ? `${window.location.origin}/${result.url.split('/').slice(1).join('/')}`
+      : `https://${result.url}`
+    navigator.clipboard.writeText(shareUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -88,11 +94,11 @@ export default function SuccessPage() {
   const handleShare = async () => {
     if (!result) return
     if (navigator.share) {
+      const shareUrl = result.url.includes('api/preview')
+        ? `${window.location.origin}/${result.url.split('/').slice(1).join('/')}`
+        : `https://${result.url}`
       try {
-        await navigator.share({
-          title: result.name,
-          url: `https://${result.url}`,
-        })
+        await navigator.share({ title: result.name, url: shareUrl })
         return
       } catch {}
     }
@@ -175,7 +181,13 @@ export default function SuccessPage() {
             {/* Action buttons */}
             <div className="grid grid-cols-2 gap-3 mb-4">
               <Button size="lg" className="w-full font-semibold" asChild>
-                <a href={`https://${result.url}`} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={result.url.startsWith('localhost') || result.url.includes('/api/preview')
+                    ? `/${result.url.split('/').slice(1).join('/')}` // relative for localhost
+                    : `https://${result.url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Open App
                 </a>
