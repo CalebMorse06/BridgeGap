@@ -8,7 +8,7 @@ const client = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3020'
 
 /**
  * Streaming endpoint that:

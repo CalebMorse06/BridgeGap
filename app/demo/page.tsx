@@ -158,7 +158,7 @@ export default function DemoPage() {
       {/* Main */}
       <div className="flex-1 flex overflow-hidden">
         {/* Chat */}
-        <div className="w-full lg:w-[440px] lg:border-r lg:border-gray-200 flex flex-col">
+        <div className="demo-chat-pane shrink-0 border-r border-gray-200 flex flex-col">
           <div className="flex-1 overflow-y-auto px-4 py-5">
             {messages.map((m, i) => (
               <div key={i} className={`flex items-end gap-2.5 mb-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`} style={{ animation: 'fadeIn 0.25s ease-out' }}>
@@ -211,7 +211,7 @@ export default function DemoPage() {
         </div>
 
         {/* Live Preview */}
-        <div className="hidden lg:block flex-1 p-5 bg-gray-100">
+        <div className="demo-preview-pane flex-1 p-5 bg-gray-100 overflow-hidden">
           <LivePreview
             templateType={DEMO_SCENARIO.templateType}
             answers={answers}

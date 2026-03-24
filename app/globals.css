@@ -119,6 +119,23 @@ body {
   to { stroke-dashoffset: 0; }
 }
 
+/* Demo layout */
+.demo-chat-pane {
+  width: 100%;
+}
+.demo-preview-pane {
+  display: none;
+  flex: 1;
+}
+@media (min-width: 1024px) {
+  .demo-chat-pane {
+    width: 460px;
+  }
+  .demo-preview-pane {
+    display: flex;
+  }
+}
+
 @keyframes bounceIn {
   0% { opacity: 0; transform: scale(0.3); }
   50% { opacity: 1; transform: scale(1.05); }
