@@ -58,8 +58,16 @@ function BuildPageInner() {
   const [integrations, setIntegrations] = useState<Integration[]>(
     INTEGRATIONS_CONFIG.map(i => ({ type: i.id, enabled: i.defaultEnabled, useOwnKeys: false }))
   )
+  const [isListening, setIsListening] = useState(false)
+  const [isVoiceSupported, setIsVoiceSupported] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Check voice support
+  useEffect(() => {
+    const SR = (window as unknown as Record<string, unknown>).SpeechRecognition || (window as unknown as Record<string, unknown>).webkitSpeechRecognition
+    setIsVoiceSupported(!!SR)
+  }, [])
 
   // Initial greeting
   useEffect(() => {
@@ -182,6 +190,38 @@ function BuildPageInner() {
     }
   }, [input, isTyping, templateType, questionIndex, answers, addMessage])
 
+  const handleVoice = useCallback(() => {
+    const SR = (window as unknown as { new(): SpeechRecognition }).SpeechRecognition || (window as unknown as { new(): SpeechRecognition }).webkitSpeechRecognition
+    if (!SR || isListening) return
+
+    setIsListening(true)
+    const recognition = new SR()
+    recognition.continuous = false
+    recognition.interimResults = true
+    recognition.lang = 'en-US'
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[0][0].transcript
+      setInput(transcript)
+    }
+
+    recognition.onend = () => {
+      setIsListening(false)
+      setTimeout(() => {
+        const el = inputRef.current
+        if (el && el.value.trim()) {
+          handleSend(el.value)
+        }
+      }, 1500)
+    }
+
+    recognition.onerror = () => {
+      setIsListening(false)
+    }
+
+    recognition.start()
+  }, [isListening, handleSend])
+
   // Handle quick reply chip selection
   const handleQuickReply = useCallback((text: string) => {
     // Map friendly labels back to values
@@ -230,6 +270,7 @@ function BuildPageInner() {
     <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
       {/* Layout CSS injected directly to avoid Turbopack tree-shaking */}
       <style>{`
+        @keyframes micPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.2)} }
         .build-chat-pane { width: 100%; }
         .build-preview-pane { display: none; flex: 1; min-width: 0; flex-direction: column; }
         .build-preview-mobile { display: block; }
@@ -355,6 +396,21 @@ function BuildPageInner() {
                   className="flex-1 h-11 rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-gray-400"
                   autoFocus
                 />
+                {isVoiceSupported && (
+                  <button
+                    onClick={handleVoice}
+                    className="h-11 w-11 rounded-xl shrink-0 flex items-center justify-center border border-gray-200 hover:bg-gray-100 transition-colors"
+                    title={isListening ? 'Listening...' : 'Voice input'}
+                    type="button"
+                    style={isListening ? { animation: 'micPulse 1s ease-in-out infinite', background: '#fee2e2', borderColor: '#fca5a5' } : {}}
+                  >
+                    {isListening ? (
+                      <span className="w-3 h-3 rounded-full bg-red-500" />
+                    ) : (
+                      <span className="text-lg">🎙️</span>
+                    )}
+                  </button>
+                )}
                 <Button onClick={() => handleSend()} disabled={!input.trim() || isTyping} size="icon" className="h-11 w-11 rounded-xl shrink-0">
                   <Send className="h-4 w-4" />
                 </Button>
