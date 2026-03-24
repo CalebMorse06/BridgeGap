@@ -241,6 +241,30 @@ function generateServiceBooking(c: GenerateConfig): string {
   </div>
 </section>
 
+<section class="sec" style="background:#f9fafb">
+  <div class="c">
+    <div style="text-align:center;margin-bottom:40px">
+      <h2 style="font-size:34px;font-weight:800;color:#111827;margin-bottom:10px">What Customers Say</h2>
+      <p style="font-size:16px;color:#6b7280">Trusted by homeowners across ${e(location || 'the area')}</p>
+    </div>
+    <div class="grid3" style="max-width:900px;margin:0 auto">
+      ${[
+        {stars:5,text:'Showed up on time, fixed the problem fast, and was transparent about pricing. Will call again.',name:'Michael R.',icon:'👨'},
+        {stars:5,text:'Very professional and friendly. They explained everything before starting. Highly recommend!',name:'Sarah K.',icon:'👩'},
+        {stars:5,text:'Emergency call on a Sunday — they were there within 2 hours. Absolute lifesavers.',name:'James T.',icon:'👨‍💼'},
+      ].map(t => `
+      <div class="card card-p">
+        <div style="display:flex;gap:2px;margin-bottom:12px;color:#f59e0b;font-size:18px">${'★'.repeat(t.stars)}</div>
+        <p style="font-size:14px;color:#374151;line-height:1.6;margin-bottom:16px">"${t.text}"</p>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;background:#f3f4f6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px">${t.icon}</div>
+          <div style="font-size:13px;font-weight:600;color:#111827">${t.name}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+</section>
+
 <section class="sec" id="book">
   <div class="c" style="max-width:560px">
     <div style="text-align:center;margin-bottom:36px">
