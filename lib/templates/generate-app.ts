@@ -149,13 +149,73 @@ function head(title: string, primary: string, primaryLight: string, desc?: strin
 ${SUCCESS_OVERLAY}`
 }
 
-function foot(projectId: string, primaryColor = '#2563eb'): string {
-  // Import at the top won't work for circular; inline the widget
+function foot(projectId: string, primaryColor = '#2563eb', businessCtx: string = '{}'): string {
   const widget = `
-<div id="vd-badge" style="position:fixed;bottom:16px;right:16px;z-index:999;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px 14px;box-shadow:0 2px 12px rgba(0,0,0,.08);font-family:Inter,-apple-system,sans-serif;cursor:pointer;transition:all .2s" onclick="window.open('https://vibedeploy.app','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-  <span style="font-size:14px">✨</span>
-  <div style="font-size:11px;font-weight:600;color:#111827;line-height:1.3">Built with VibeDeploy</div>
+<!-- AI Chat Widget -->
+<div id="chatBtn" style="position:fixed;bottom:20px;right:20px;z-index:1000;background:var(--p,${primaryColor});color:#fff;border-radius:50px;padding:12px 20px;font-size:14px;font-weight:600;font-family:Inter,-apple-system,sans-serif;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;align-items:center;gap:8px;transition:all .2s;border:none" onclick="toggleChat()" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+  <span style="font-size:18px">💬</span>
+  <span id="chatBtnText">Ask a question</span>
 </div>
+
+<div id="chatBox" style="display:none;position:fixed;bottom:80px;right:20px;z-index:1000;width:min(340px,calc(100vw-40px));background:#fff;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.15);overflow:hidden;animation:fadeIn .2s ease-out;font-family:Inter,-apple-system,sans-serif">
+  <div style="background:var(--p,${primaryColor});padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+    <div style="color:#fff">
+      <div style="font-weight:700;font-size:15px">Ask Us Anything</div>
+      <div style="font-size:12px;opacity:.8">Powered by AI · Usually instant</div>
+    </div>
+    <button onclick="toggleChat()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">×</button>
+  </div>
+  <div id="chatMsgs" style="height:200px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px">
+    <div style="background:#f3f4f6;padding:10px 14px;border-radius:12px;font-size:13px;color:#374151;max-width:80%">Hi! What would you like to know? 👋</div>
+  </div>
+  <div style="padding:12px 16px;border-top:1px solid #f3f4f6;display:flex;gap:8px">
+    <input id="chatInput" type="text" placeholder="Type your question..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;outline:none;font-family:inherit" onfocus="this.style.borderColor='var(--p,${primaryColor})'" onblur="this.style.borderColor='#e5e7eb'">
+    <button onclick="sendChat()" style="background:var(--p,${primaryColor});color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
+  </div>
+</div>
+
+<div id="vd-brand" style="position:fixed;bottom:20px;left:20px;z-index:999;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px 12px;box-shadow:0 2px 8px rgba(0,0,0,.06);font-family:Inter,-apple-system,sans-serif;cursor:pointer;font-size:11px;color:#9ca3af;font-weight:500" onclick="window.open('https://vibedeploy.app','_blank')">
+  <span>✨</span>VibeDeploy
+</div>
+
+<script>
+var chatOpen=false;
+var businessCtx=${businessCtx};
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chatBox').style.display=chatOpen?'flex':'none';
+  if(chatOpen){document.getElementById('chatInput').focus();}
+  document.getElementById('chatBtnText').textContent=chatOpen?'Close':'Ask a question';
+}
+function sendChat(){
+  var input=document.getElementById('chatInput');
+  var q=input.value.trim();
+  if(!q)return;
+  input.value='';
+  addMsg(q,true);
+  addMsg('...',false,'thinking');
+  fetch('${API_BASE}/api/widget-chat',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({question:q,businessContext:businessCtx})
+  }).then(function(r){return r.json()}).then(function(d){
+    var el=document.getElementById('thinking');
+    if(el){el.textContent=d.answer||'Please contact us for more info!';el.id='';}
+  }).catch(function(){
+    var el=document.getElementById('thinking');
+    if(el){el.textContent='Please use the contact form or call us!';el.id='';}
+  });
+}
+function addMsg(text,isUser,id){
+  var msgs=document.getElementById('chatMsgs');
+  var div=document.createElement('div');
+  div.textContent=text;
+  if(id)div.id=id;
+  div.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;'+(isUser?'background:var(--p,#2563eb);color:#fff;align-self:flex-end;margin-left:auto':'background:#f3f4f6;color:#374151');
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+</script>
 `
   return `${widget}${ANALYTICS_SCRIPT(projectId)}</body></html>`
 }
@@ -305,7 +365,7 @@ function generateServiceBooking(c: GenerateConfig): string {
 </footer>
 
 ${SUBMIT_SCRIPT(pid, name, 'service_booking', email, 'bookForm', 'Request Sent! 📅', "We'll confirm your appointment within 24 hours and send you a reminder the day before.")}
-${foot(pid)}`
+${foot(pid, primary, JSON.stringify({name:c.businessName||c.eventName||c.yourName||c.organizationName||"",services:c.services||"",hours:c.hours||"",location:c.location||"",email:c.contactEmail||""}))}`
 }
 
 // ---------------------------------------------------------------------------
@@ -447,7 +507,7 @@ ${addressHours ? `
     </div>
   </div>
 </footer>
-${foot(pid)}`
+${foot(pid, primary, JSON.stringify({name:c.businessName||c.eventName||c.yourName||c.organizationName||"",services:c.services||"",hours:c.hours||"",location:c.location||"",email:c.contactEmail||""}))}`
 }
 
 // ---------------------------------------------------------------------------
@@ -536,7 +596,7 @@ document.getElementById('regForm').addEventListener('submit',function(){
   if(el)el.textContent=spots;
 },true);
 </script>
-${foot(pid)}`
+${foot(pid, primary, JSON.stringify({name:c.businessName||c.eventName||c.yourName||c.organizationName||"",services:c.services||"",hours:c.hours||"",location:c.location||"",email:c.contactEmail||""}))}`
 }
 
 // ---------------------------------------------------------------------------
@@ -599,7 +659,7 @@ document.getElementById('wlForm').addEventListener('submit',function(){
   if(bar)bar.style.width=p+'%';
 },true);
 </script>
-${foot(pid)}`
+${foot(pid, primary, JSON.stringify({name:c.businessName||c.eventName||c.yourName||c.organizationName||"",services:c.services||"",hours:c.hours||"",location:c.location||"",email:c.contactEmail||""}))}`
 }
 
 // ---------------------------------------------------------------------------
@@ -677,7 +737,7 @@ ${email ? `
     </div>
   </div>
 </footer>
-${foot(pid)}`
+${foot(pid, primary, JSON.stringify({name:c.businessName||c.eventName||c.yourName||c.organizationName||"",services:c.services||"",hours:c.hours||"",location:c.location||"",email:c.contactEmail||""}))}`
 }
 
 // ---------------------------------------------------------------------------
@@ -768,5 +828,5 @@ function selectAmt(btn,amt){
 }
 document.querySelectorAll('button[onclick]').forEach(function(b){b.classList.add('amt-btn')});
 </script>
-${foot(pid)}`
+${foot(pid, primary, JSON.stringify({name:c.businessName||c.eventName||c.yourName||c.organizationName||"",services:c.services||"",hours:c.hours||"",location:c.location||"",email:c.contactEmail||""}))}`
 }
