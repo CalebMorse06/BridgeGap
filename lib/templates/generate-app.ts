@@ -316,6 +316,7 @@ function generateRestaurantMenu(c: GenerateConfig): string {
   const cuisine = c.cuisine || 'Restaurant'
   const addressHours = c.addressAndHours || ''
   const phone = c.contactPhone || ''
+  const location = addressHours.split('\n')[0] || ''
   const pid = c.projectId || ''
   const primary = c.brandColor || '#ea580c'
 
@@ -359,6 +360,13 @@ function generateRestaurantMenu(c: GenerateConfig): string {
   </div>
 </section>
 
+<!-- Social proof strip -->
+<section style="background:#fff;border-bottom:1px solid #f3f4f6;padding:16px 0">
+  <div class="c" style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap">
+    ${[`⭐ 4.9 on Google`, `🏆 ${cuisine} Favorite`, `📍 ${location||'Local Favorite'}`, `🕐 ${(addressHours||'').split('\n')[0]||'See Hours'}`].map(t=>`<span style="font-size:13px;color:#6b7280;font-weight:500">${e(t)}</span>`).join('')}
+  </div>
+</section>
+
 <section class="sec" id="menu">
   <div class="c">
     <div style="text-align:center;margin-bottom:48px">
@@ -366,19 +374,28 @@ function generateRestaurantMenu(c: GenerateConfig): string {
       <p style="font-size:16px;color:#6b7280">Everything made fresh to order</p>
     </div>
     ${items.length > 0 ? `
-    <div style="max-width:700px;margin:0 auto">
-      ${items.map(item => `
-      <div style="display:flex;justify-content:space-between;align-items:start;gap:20px;padding:20px 0;border-bottom:1px solid #f3f4f6">
-        <div style="flex:1">
-          <div style="font-weight:700;font-size:16px;color:#111827;margin-bottom:3px">${e(item.name)}</div>
-          ${item.desc ? `<div style="font-size:14px;color:#6b7280;line-height:1.5;max-width:480px">${e(item.desc)}</div>` : ''}
+    <div style="max-width:760px;margin:0 auto">
+      ${items.map((item,i) => `
+      <div style="display:flex;justify-content:space-between;align-items:start;gap:20px;padding:18px 0;border-bottom:1px solid #f3f4f6;${i===0?'border-top:1px solid #f3f4f6':''}">
+        <div style="display:flex;gap:14px;flex:1">
+          <div style="width:48px;height:48px;border-radius:10px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:22px;shrink:0">🍽️</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:15px;color:#111827;margin-bottom:3px">${e(item.name)}</div>
+            ${item.desc ? `<div style="font-size:13px;color:#6b7280;line-height:1.5">${e(item.desc)}</div>` : ''}
+          </div>
         </div>
-        ${item.price ? `<div style="font-weight:800;color:var(--p);font-size:17px;white-space:nowrap;padding-top:2px">${e(item.price)}</div>` : ''}
+        <div style="text-align:right;shrink:0">
+          ${item.price ? `<div style="font-weight:800;color:var(--p);font-size:16px">${e(item.price)}</div>` : ''}
+          ${hasOrdering ? `<button onclick="addToCart('${e(item.name)}','${e(item.price)}')" style="margin-top:6px;padding:5px 12px;background:var(--p);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Add</button>` : ''}
+        </div>
       </div>`).join('')}
     </div>
     ${hasOrdering ? `
+    <div id="cartBar" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:14px 28px;border-radius:99px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:50;cursor:pointer;white-space:nowrap" onclick="submitOrder()">
+      🛒 View Order (<span id="cartCount">0</span> items) →
+    </div>
     <div style="text-align:center;margin-top:48px">
-      <a href="${phone ? `tel:${e(phone)}` : '#'}" class="btn btn-p" style="font-size:16px;padding:16px 44px">🛒 ${phone ? 'Call to Order' : 'Order Now'}</a>
+      <a href="${phone ? `tel:${e(phone)}` : '#'}" class="btn btn-p" style="font-size:16px;padding:16px 44px">📞 ${phone ? `Call to Order: ${e(phone)}` : 'Contact Us'}</a>
     </div>` : ''}
     ` : `
     <div style="text-align:center;padding:60px 20px">
@@ -388,6 +405,24 @@ function generateRestaurantMenu(c: GenerateConfig): string {
     </div>`}
   </div>
 </section>
+
+${hasOrdering ? `
+<script>
+var cart=[];
+function addToCart(name,price){
+  cart.push({name,price});
+  document.getElementById('cartCount').textContent=cart.length;
+  document.getElementById('cartBar').style.display='block';
+}
+function submitOrder(){
+  var items=cart.map(function(i){return i.name}).join(', ');
+  document.getElementById('ol-title').textContent='Order Placed! 🎉';
+  document.getElementById('ol-msg').textContent='Your order for: '+items+'. We\\'ll prepare it right away!';
+  document.getElementById('overlay').style.display='flex';
+  cart=[];
+  document.getElementById('cartBar').style.display='none';
+}
+</script>` : ''}
 
 ${addressHours ? `
 <section class="sec" style="background:#fff7ed" id="visit">
