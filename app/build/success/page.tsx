@@ -52,7 +52,7 @@ const TEMPLATE_LABELS: Record<string, { label: string; color: string; nextSteps:
 
 export default function SuccessPage() {
   const router = useRouter()
-  const [result, setResult] = useState<{ url: string; name: string; templateType: string } | null>(null)
+  const [result, setResult] = useState<{ url: string; name: string; templateType: string; projectId?: string } | null>(null)
   const [copied, setCopied] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
   const [showQr, setShowQr] = useState(false)
@@ -104,6 +104,18 @@ export default function SuccessPage() {
     }
     handleCopy()
   }
+
+  // Derive clean display URL and real href
+  const isPreview = result ? (result.url.includes('/api/preview/') || result.url.includes('localhost')) : false
+  const subdomain = result?.url.split('/api/preview/')[1] || result?.url.split('/').pop() || ''
+  const displayUrl = isPreview
+    ? `${subdomain}.vibedeploy.app` // friendly display even in preview mode
+    : result?.url || ''
+  const appHref = result
+    ? isPreview
+      ? `/preview/${subdomain}`  // local iframe view
+      : `https://${result.url}`
+    : '#'
 
   const handleDownloadQr = () => {
     if (!qrDataUrl) return
@@ -163,7 +175,7 @@ export default function SuccessPage() {
               <div className="min-w-0">
                 <p className="text-xs text-gray-400 mb-0.5">Your app URL</p>
                 <p className="text-sm font-mono font-medium text-gray-900 truncate">
-                  https://{result.url}
+                  {isPreview ? '' : 'https://'}{displayUrl}
                 </p>
               </div>
               <button
@@ -181,13 +193,7 @@ export default function SuccessPage() {
             {/* Action buttons */}
             <div className="grid grid-cols-2 gap-3 mb-4">
               <Button size="lg" className="w-full font-semibold" asChild>
-                <a
-                  href={result.url.startsWith('localhost') || result.url.includes('/api/preview')
-                    ? `/${result.url.split('/').slice(1).join('/')}` // relative for localhost
-                    : `https://${result.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={appHref} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Open App
                 </a>
